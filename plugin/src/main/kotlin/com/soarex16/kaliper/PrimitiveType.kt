@@ -6,13 +6,14 @@ import org.jetbrains.kotlin.types.isNullable
 
 val primitiveTypesSizes = mapOf(
     "kotlin.Boolean" to 1,
-    "kotlin.Char" to 1,
-    "kotlin.Byte" to 1,
-    "kotlin.Short" to 2,
-    "kotlin.Int" to 4,
-    "kotlin.Long" to 8,
-    "kotlin.Float" to 4,
-    "kotlin.Double" to 8,
+    "kotlin.Char" to Char.SIZE_BYTES,
+    "kotlin.Byte" to Byte.SIZE_BYTES,
+    "kotlin.Short" to Short.SIZE_BYTES,
+    "kotlin.Int" to Int.SIZE_BYTES,
+    "kotlin.Long" to Long.SIZE_BYTES,
+    "kotlin.Float" to Float.SIZE_BYTES,
+    "kotlin.Double" to Double.SIZE_BYTES,
+    // TODO: Uint, ULong, etc
 )
 
 const val REFERENCE_TYPE_SIZE = 8

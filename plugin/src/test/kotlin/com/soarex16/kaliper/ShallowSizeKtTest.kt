@@ -12,6 +12,7 @@ const val TEST_CLASS_NAME = "TestClass"
 const val SHALLOW_SIZE_METHOD_NAME = "shallowSize"
 
 class ShallowSizeTest {
+    // if ctorParameters == null we don't check size by method invocation
     @ParameterizedTest
     @MethodSource("testData")
     fun testClassMeasure(className: String, source: SourceFile, expectedSize: Int, ctorParameters: List<Any>? = listOf(), ) {
@@ -41,7 +42,7 @@ class ShallowSizeTest {
         val shallowSizeMethod = extensionKlass.methods.find { it.name == SHALLOW_SIZE_METHOD_NAME }
 
         val actualSize = shallowSizeMethod?.invoke(null, klassInstance)
-        assertEquals(actualSize, expectedSize)
+        assertEquals(expectedSize, actualSize)
     }
 
     companion object {
@@ -54,7 +55,7 @@ class ShallowSizeTest {
 
                     data class TestClass1(val x: Int?)
                 """.trimIndent()),
-                8,
+                REFERENCE_TYPE_SIZE,
                 listOf(12)
             ),
             Arguments.of(
@@ -64,7 +65,7 @@ class ShallowSizeTest {
 
                     data class TestClass2(val x: Boolean?)
                 """.trimIndent()),
-                8,
+                REFERENCE_TYPE_SIZE,
                 listOf(false)
             ),
             Arguments.of(
@@ -76,7 +77,7 @@ class ShallowSizeTest {
     
                     data class TestClass3(val t: UserType)
                 """.trimIndent()),
-                8,
+                REFERENCE_TYPE_SIZE,
                 null
             ),
             Arguments.of(
@@ -86,32 +87,106 @@ class ShallowSizeTest {
     
                     data class TestClass4(val s: Set<Int>)
                 """.trimIndent()),
-                    8,
-                    null
+                REFERENCE_TYPE_SIZE,
+                null
             ),
             Arguments.of(
                 "TestClass5",
                 SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
                     package $TEST_PACKAGE
                     
-                    data class TestClass5(val x: Int) {
+                    data class TestClass5(val a: Int, val b: Float)
+                """.trimIndent()),
+                Int.SIZE_BYTES + Float.SIZE_BYTES,
+                listOf<Any>(1, 1.toFloat())
+            ),
+            Arguments.of(
+                "TestClass6",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass6(val a: String, val b: Int)
+                """.trimIndent()),
+                REFERENCE_TYPE_SIZE + Int.SIZE_BYTES,
+                listOf<Any>("abc", 1)
+            ),
+            Arguments.of(
+                "TestClass7",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass7(val name: String) {
+                        var age: Int = 0
+                    }
+                """.trimIndent()),
+                REFERENCE_TYPE_SIZE + Int.SIZE_BYTES,
+                listOf<Any>("abc")
+            ),
+            Arguments.of(
+                "TestClass8",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass8(val x: Int) {
                             var mutableVar = 0
                             val immutableVar: Byte = 0
                             var withoutInitializer: Double = 0.0
-                        
+                    }
+                """.trimIndent()),
+                Int.SIZE_BYTES + Int.SIZE_BYTES + Byte.SIZE_BYTES + Double.SIZE_BYTES,
+                listOf<Any>(12)
+            ),
+            Arguments.of(
+                "TestClass9",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass9(val x: Int) {
                             var customGetter = 0
                                 get() {
                                     return (field * 2)
                                 }
-                        
+                    }
+                """.trimIndent()),
+                Int.SIZE_BYTES + Int.SIZE_BYTES,
+                listOf<Any>(12)
+            ),
+            Arguments.of(
+                "TestClass10",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass10(val x: Int) {
                             var customSetter = 0
                                 set(value) {
                                     if (value >= 0)
                                         field = value
                                 }
-                        
+                    }
+                """.trimIndent()),
+                Int.SIZE_BYTES + Int.SIZE_BYTES,
+                listOf<Any>(12)
+            ),
+            Arguments.of(
+                "TestClass11",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass11(val x: Int) {
                             val customGetter2
                                 get() = 42
+                    }
+                """.trimIndent()),
+                Int.SIZE_BYTES,
+                listOf<Any>(12)
+            ),
+            Arguments.of(
+                "TestClass12",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+                    
+                    data class TestClass12(val x: Int) {
+                            var mutableVar = 0
 
                             var virtualProp
                                 get() = mutableVar * 2
@@ -120,40 +195,8 @@ class ShallowSizeTest {
                                 }
                     }
                 """.trimIndent()),
-                4 + 4 + 1 + 8 + 4 + 4,
+                Int.SIZE_BYTES + Int.SIZE_BYTES,
                 listOf<Any>(12)
-            ),
-            Arguments.of(
-                "TestClass6",
-                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
-                    package $TEST_PACKAGE
-                    
-                    data class TestClass6(val a: Int, val b: Float)
-                """.trimIndent()),
-                4 + 4,
-                listOf<Any>(1, 1.toFloat())
-            ),
-            Arguments.of(
-                "TestClass7",
-                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
-                    package $TEST_PACKAGE
-                    
-                    data class TestClass7(val a: String, val b: Int)
-                """.trimIndent()),
-                8 + 4,
-                listOf<Any>("abc", 1)
-            ),
-            Arguments.of(
-                "TestClass8",
-                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
-                    package $TEST_PACKAGE
-                    
-                    data class TestClass8(val name: String) {
-                        var age: Int = 0
-                    }
-                """.trimIndent()),
-                8 + 4,
-                listOf<Any>("abc")
             ),
         )
     }
