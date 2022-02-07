@@ -11,9 +11,12 @@ val primitiveTypesSizes = mapOf(
     "kotlin.Short" to Short.SIZE_BYTES,
     "kotlin.Int" to Int.SIZE_BYTES,
     "kotlin.Long" to Long.SIZE_BYTES,
+    "kotlin.UByte" to UByte.SIZE_BYTES,
+    "kotlin.UShort" to UShort.SIZE_BYTES,
+    "kotlin.UInt" to UInt.SIZE_BYTES,
+    "kotlin.ULong" to ULong.SIZE_BYTES,
     "kotlin.Float" to Float.SIZE_BYTES,
     "kotlin.Double" to Double.SIZE_BYTES,
-    // TODO: Uint, ULong, etc
 )
 
 const val REFERENCE_TYPE_SIZE = 8

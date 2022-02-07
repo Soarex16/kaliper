@@ -50,7 +50,7 @@ class ShallowSizeTest {
         fun testData() = listOf(
             Arguments.of(
                 "TestClass1",
-                SourceFile.kotlin("TestClass1.kt", """
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
                     package $TEST_PACKAGE
 
                     data class TestClass1(val x: Int?)
@@ -197,6 +197,16 @@ class ShallowSizeTest {
                 """.trimIndent()),
                 Int.SIZE_BYTES + Int.SIZE_BYTES,
                 listOf<Any>(12)
+            ),
+            Arguments.of(
+                "TestClass13",
+                SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
+                    package $TEST_PACKAGE
+
+                    data class TestClass13(val x: UByte)
+                """.trimIndent()),
+                UByte.SIZE_BYTES,
+                listOf(12.toUByte())
             ),
         )
     }
