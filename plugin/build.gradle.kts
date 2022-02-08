@@ -5,7 +5,7 @@ val jvmTargetVersion: String by project
 val arrowMetaVersion: String by project
 
 plugins {
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "4.0.4"
 }
 

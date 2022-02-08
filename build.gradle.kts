@@ -6,6 +6,10 @@ val arrowMetaVersion: String by project
 group = groupId
 version = "1.0-SNAPSHOT"
 
+plugins {
+    kotlin("jvm") version "1.5.0"
+}
+
 allprojects {
     repositories {
         mavenCentral()

@@ -34,13 +34,7 @@ val Meta.generateShallowSize: CliPlugin
                     |$packageString
                     |fun ${className}.shallowSize(): Int = $dataClassSize
                 """.trimMargin().file("${className}_shallowSize"))
-            },
-            /*namedFunction(this, { element.name == "shallowSize" }) { (functionNode, descriptor) ->
-                Transform.replace(
-                    replacing = functionNode.body()?.originalElement!!,
-                    newDeclaration = """42""".expression
-                )
-            }*/
+            }
         )
     }
 
