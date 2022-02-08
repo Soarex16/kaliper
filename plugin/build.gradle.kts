@@ -1,16 +1,16 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-val groupId: String by project
-val jvmTargetVersion: String by project
-val arrowMetaVersion: String by project
+val kotlinVersion: String by rootProject.extra
+val jvmTargetVersion: String by rootProject.extra
+val arrowMetaVersion: String by rootProject.extra
 
 plugins {
     kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "4.0.4"
 }
 
-group = groupId
-version = "1.0"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()
@@ -25,7 +25,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable:${kotlinVersion}")
     compileOnly("io.arrow-kt:arrow-meta:${arrowMetaVersion}")
 }
 

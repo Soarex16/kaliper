@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val groupId: String by project
-val jvmTargetVersion: String by project
-val arrowMetaVersion: String by project
+val kotlinVersion: String by rootProject.extra
+val jvmTargetVersion: String by rootProject.extra
+val arrowMetaVersion: String by rootProject.extra
 
 plugins {
     kotlin("jvm")
 }
 
-group = "com.soarex16"
-version = "1.0"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()

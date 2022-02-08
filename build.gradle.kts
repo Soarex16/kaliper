@@ -1,9 +1,8 @@
-val groupId: String by project
-val kotlinVersion: String by project
-val jvmTargetVersion: String by project
-val arrowMetaVersion: String by project
+val kotlinVersion: String by extra("1.5.0")
+val jvmTargetVersion: String by extra("1.8")
+val arrowMetaVersion: String by extra("1.5.0-SNAPSHOT")
 
-group = groupId
+group = "com.soarex16.kaliper"
 version = "1.0"
 
 plugins {
