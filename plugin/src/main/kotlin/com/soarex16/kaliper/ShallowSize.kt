@@ -6,6 +6,7 @@ import arrow.meta.invoke
 import arrow.meta.quotes.Transform
 import arrow.meta.quotes.classDeclaration
 import arrow.meta.quotes.classorobject.ClassDeclaration
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtPropertyAccessor
@@ -19,7 +20,7 @@ val Meta.generateShallowSize: CliPlugin
         meta(
             classDeclaration(this, { element.isData() }) {
                 val className = this.name.toString()
-                val packageName = value.fqName?.parent().toString()
+                val packageName = value.fqName?.parent() ?: FqName.ROOT
 
                 val bindingContext = ctx.bindingTrace?.bindingContext!!
 
@@ -27,9 +28,10 @@ val Meta.generateShallowSize: CliPlugin
 
                 val dataClassSize = fieldTypes.sumOf { getSizeType(it.second) }
 
+                val packageString = if (packageName.isRoot) "" else "package $packageName\n"
+
                 Transform.newSources("""
-                    |package $packageName
-                    |
+                    |$packageString
                     |fun ${className}.shallowSize(): Int = $dataClassSize
                 """.trimMargin().file("${className}_shallowSize"))
             },

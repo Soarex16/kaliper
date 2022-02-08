@@ -3,6 +3,7 @@ package com.soarex16.kaliper
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -43,6 +44,25 @@ class ShallowSizeTest {
 
         val actualSize = shallowSizeMethod?.invoke(null, klassInstance)
         assertEquals(expectedSize, actualSize)
+    }
+
+    @Test
+    fun testRootPackage() {
+        val className = "SampleClass"
+
+        val source = SourceFile.kotlin("$className.kt", """data class $className(val x: Int?)""")
+
+        val result = KotlinCompilation().apply {
+            sources = listOf(source)
+            compilerPlugins = listOf(KaliperMetaPlugin())
+            inheritClassPath = true
+            messageOutputStream = System.out // see diagnostics in real time
+        }.compile()
+
+        assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
+
+        val fqExtensionKlassName = "${className}_${SHALLOW_SIZE_METHOD_NAME}Kt"
+        result.classLoader.loadClass(fqExtensionKlassName)
     }
 
     companion object {
