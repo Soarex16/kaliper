@@ -37,7 +37,7 @@ class ShallowSizeTest {
 
         val klassInstance = klass
             .constructors
-            .first() // Because we process only data classes, we can suppose that we have only one ctor
+            .first() // Because we process only data classes, we can suppose that we have only one (primary) ctor
             .newInstance(*ctorParameters.toTypedArray())
 
         val shallowSizeMethod = extensionKlass.methods.find { it.name == SHALLOW_SIZE_METHOD_NAME }
@@ -223,10 +223,10 @@ class ShallowSizeTest {
                 SourceFile.kotlin("$TEST_CLASS_NAME.kt", """
                     package $TEST_PACKAGE
 
-                    data class TestClass13(val x: UByte)
+                    data class TestClass13(val x: ULong)
                 """.trimIndent()),
-                UByte.SIZE_BYTES,
-                listOf(12.toUByte())
+                ULong.SIZE_BYTES,
+                listOf(12.toULong())
             ),
         )
     }
