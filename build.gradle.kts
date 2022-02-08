@@ -4,7 +4,7 @@ val jvmTargetVersion: String by project
 val arrowMetaVersion: String by project
 
 group = groupId
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 plugins {
     kotlin("jvm") version "1.5.0"

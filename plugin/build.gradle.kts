@@ -10,7 +10,7 @@ plugins {
 }
 
 group = groupId
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -35,6 +35,7 @@ tasks.getByName<ShadowJar>("shadowJar") {
         exclude("org.jetbrains.kotlin:kotlin-stdlib")
         exclude("org.jetbrains.kotlin:kotlin-compiler-embeddable")
     }
+    archiveBaseName.set("kaliper")
 }
 
 tasks.getByName<Test>("test") {
