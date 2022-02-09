@@ -2,6 +2,8 @@
 
 Kaliper is a kotlin compiler plugin for automatic counting shallow size of data classes
 
+Kotlin version: 1.5.0
+
 ## Building
 
 You can use prebuilt binaries: 
