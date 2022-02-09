@@ -6,7 +6,7 @@ Kotlin version: 1.5.0
 
 ## Building
 
-You can use prebuilt binaries: 
+You can use prebuilt binaries [here](https://github.com/Soarex16/kaliper/releases/latest).
 
 The project is built with Gradle. Run Gradle to build the project and to 
 run the tests using the following command on Unix/macOS:
