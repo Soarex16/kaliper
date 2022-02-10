@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.isNullable
 
 val primitiveTypesSizes = mapOf(
-    "kotlin.Boolean" to 1,
+    "kotlin.Boolean" to 1, // virtual machine dependent or varies from one operating system to other
     "kotlin.Char" to Char.SIZE_BYTES,
     "kotlin.Byte" to Byte.SIZE_BYTES,
     "kotlin.Short" to Short.SIZE_BYTES,
@@ -21,7 +21,7 @@ val primitiveTypesSizes = mapOf(
 
 const val REFERENCE_TYPE_SIZE = 8
 
-fun getSizeType(type: KotlinType?): Int = when {
+fun getTypeSize(type: KotlinType?): Int = when {
     // val types = cls.value.getProperties().map { it.asmType() }
     type == null -> throw NullPointerException()
     type.isNullable() -> REFERENCE_TYPE_SIZE

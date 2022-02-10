@@ -5,8 +5,8 @@ import arrow.meta.Meta
 import arrow.meta.invoke
 import arrow.meta.quotes.Transform
 import arrow.meta.quotes.classDeclaration
-import arrow.meta.quotes.classorobject.ClassDeclaration
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtPropertyAccessor
@@ -24,9 +24,9 @@ val Meta.generateShallowSize: CliPlugin
 
                 val bindingContext = ctx.bindingTrace?.bindingContext!!
 
-                val fieldTypes = getClassFields(this, bindingContext)
+                val fieldTypes = getClassFields(this.value, bindingContext)
 
-                val dataClassSize = fieldTypes.sumOf { getSizeType(it.second) }
+                val dataClassSize = fieldTypes.sumOf { getTypeSize(it.second) }
 
                 val packageString = if (packageName.isRoot) "" else "package $packageName\n"
 
@@ -47,11 +47,11 @@ fun KtProperty.hasBackingField() = this.accessors.size == 0 || this.accessors.an
 fun KtPropertyAccessor.refersFieldIdentifier() = anyDescendantOfType<KtNameReferenceExpression> { it.text == "field" }
 
 fun getClassFields(
-    cls: ClassDeclaration,
+    klass: KtClass,
     ctx: BindingContext
 ): List<Pair<String, KotlinType?>> {
-    val constructorParams = cls.primaryConstructor?.valueParameters
-    val bodyParams = cls.value.getProperties().filter { it.hasBackingField() }
+    val constructorParams = klass.primaryConstructor?.valueParameters
+    val bodyParams = klass.getProperties().filter { it.hasBackingField() }
 
     val ctorTypesInfo = constructorParams?.map { Pair(it.name!!, it.createTypeBindingForReturnType(ctx)?.type) } ?: listOf()
     val bodyPropsTypeInfo = bodyParams.map { Pair(it.name!!, it.createTypeBindingForReturnType(ctx)?.type) }
